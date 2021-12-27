@@ -1,0 +1,21 @@
+{
+  "name": "lego-home-alone-hunter",
+  "version": "1.0.0",
+  "description": "Is that certain lego set in stock?",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "lint": "eslint . --ext .ts",
+    "test": "playwright test"
+  },
+  "author": "jesse smith",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.17.1",
+    "eslint": "^8.5.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "playwright": "^1.17.1"
+  }
+}
