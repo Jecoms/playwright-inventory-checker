@@ -4,7 +4,7 @@ const readArgs = () => {
   const [_, __, argsAction] = process.argv
 
   let action = argsAction as FeatureAction
-  let error = ''
+  let error: string | undefined
 
   if (action === undefined) {
     error = 'No action specified'

@@ -2,7 +2,7 @@ import { FeatureAction } from './types'
 import { script as homeAloneSetScript } from '../features/lego/setInStockCheck/homeAlone'
 
 const getActionScript = (action: FeatureAction) => {
-  let error = ''
+  let error: string | undefined
 
   switch (action) {
     case FeatureAction.LegoSetInStockCheckHomeAlone:
