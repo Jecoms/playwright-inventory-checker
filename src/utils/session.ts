@@ -1,49 +1,31 @@
 import { chromium, Browser, Page } from 'playwright'
-import { v4 as generateUuid } from 'uuid'
-import { now } from './time'
-import { FeatureAction, Session, SessionError } from './types'
+import { RuntimeError, Session } from './types'
 
-const sessionError = (requestId: string, error: string): SessionError => ({
-  browser: undefined,
-  page: undefined,
-  requestId,
-  error
-})
+const emptySession: Session = { browser: undefined, page: undefined }
 
-const session = async (
-  action: FeatureAction
-): Promise<Session | SessionError> => {
-  let requestId = `${action}/${generateUuid()}`
+const session = async (): Promise<[Session, RuntimeError]> => {
   let browser: Browser
   let page: Page
 
   try {
-    browser = await chromium.launch({
-      logger: {
-        isEnabled: (name, _) => name === 'browser',
-        log: (name, _, message, __) =>
-          console.log(`|${action}|${now()}| [${name}]: ${message}`)
-      }
-    })
-  } catch (browserLaunchError) {
-    return sessionError(
-      requestId,
-      `Failed to launch browser: ${browserLaunchError}`
-    )
+    browser = await chromium.launch()
+  } catch ({ message }) {
+    return [emptySession, `Failed to launch browser: ${message}`]
   }
 
   try {
     page = await browser.newPage()
-  } catch (pageError) {
-    return sessionError(requestId, `Failed to open new page: ${pageError}`)
+  } catch ({ message }) {
+    return [emptySession, `Failed to open new page: ${message}`]
   }
 
-  return {
-    browser,
-    page,
-    requestId,
-    error: undefined
-  }
+  return [
+    {
+      browser,
+      page
+    },
+    undefined
+  ]
 }
 
 export { session }

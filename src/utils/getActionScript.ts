@@ -1,18 +1,23 @@
-import { FeatureAction } from './types'
+import {
+  FeatureAction,
+  FeatureActionScript,
+  Logger,
+  RuntimeError
+} from './types'
 import { script as homeAloneSetScript } from '../features/lego/setInStockCheck/homeAlone'
 
-const getActionScript = (action: FeatureAction) => {
-  let error: string | undefined
-
+const getActionScript = (
+  action: FeatureAction,
+  logger: Logger
+): [FeatureActionScript, RuntimeError] => {
   switch (action) {
     case FeatureAction.LegoSetInStockCheckHomeAlone:
-      console.log(
+      logger.debug(
         `${FeatureAction.LegoSetInStockCheckHomeAlone} action selected`
       )
-      return { script: homeAloneSetScript, error }
+      return [homeAloneSetScript, undefined]
     default:
-      error = `Script not implemented for action: [${action}]`
-      return { script: () => {}, error }
+      return [undefined, `Script not implemented for action: [${action}]`]
   }
 }
 

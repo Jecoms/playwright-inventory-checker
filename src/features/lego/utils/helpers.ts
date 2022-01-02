@@ -1,26 +1,27 @@
 import { Page } from 'playwright'
+import { Logger } from '../../../utils/types'
 
-const clearAgeGate = async (page: Page) => {
+const clearAgeGate = async (page: Page, logger: Logger) => {
   const ageGateVisible = await page.locator('[data-test="age-gate-overlay"]')
 
   if (ageGateVisible) {
     await page.locator('[data-test="age-gate-grown-up-cta"]').click()
-    console.debug('Age gate modal closed')
+    logger.debug('Age gate modal closed')
   } else {
-    console.debug('Age gate modal not visible')
+    logger.debug('Age gate modal not visible')
   }
 }
 
-const clearCookieModal = async (page: Page) => {
+const clearCookieModal = async (page: Page, logger: Logger) => {
   const cookieSettingsVisible = await page.locator(
     '[data-test="cookie-modal-content"]'
   )
 
   if (cookieSettingsVisible) {
     await page.locator('[data-test="cookie-necessary-button"]').click()
-    console.debug('Cookie modal closed')
+    logger.debug('Cookie modal closed')
   } else {
-    console.debug('Cookie modal not visible')
+    logger.debug('Cookie modal not visible')
   }
 }
 

@@ -1,3 +1,3 @@
-const now = () => new Date().toUTCString()
+const now = () => new Date().toISOString()
 
 export { now }

@@ -1,28 +1,40 @@
+import { v4 as generateUuid } from 'uuid'
 import { getActionScript } from './utils/getActionScript'
 import { session } from './utils/session'
 import { readArgs } from './utils/argsParser'
 import { takeScreenshot } from './utils/screenshots'
+import { initLogger, LogLevel } from './utils/logger'
 ;(async () => {
-  const { action, error: argError } = readArgs()
+  const [action, argError] = readArgs()
+  const requestId = `${action}/${generateUuid()}`
+  const logger = initLogger(requestId, {
+    logLevel: LogLevel.Info,
+    hideTimestamp: true
+  })
 
   if (argError) {
-    console.error(argError)
+    logger.error(argError)
     process.exit(1)
   }
 
-  const { script, error: actionError } = getActionScript(action)
+  const [script, actionError] = getActionScript(action, logger)
 
   if (actionError) {
-    console.error(actionError)
+    logger.error(actionError)
     process.exit(1)
   }
 
-  const { browser, page, requestId } = await session(action)
+  const [{ browser, page }, sessionError] = await session()
+
+  if (sessionError) {
+    logger.error(sessionError)
+    process.exit(1)
+  }
 
   try {
-    await script(page, requestId)
+    await script(page, requestId, logger)
   } catch (scriptError) {
-    console.error(scriptError)
+    logger.error(scriptError)
     await takeScreenshot(page, requestId, 'unhandled-error')
     process.exit(1)
   } finally {

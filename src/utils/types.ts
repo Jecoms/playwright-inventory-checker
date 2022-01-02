@@ -3,19 +3,27 @@ import { Browser, Page } from 'playwright'
 interface Session {
   browser: Browser
   page: Page
-  requestId: string
-  error: undefined
-}
-
-interface SessionError {
-  browser: undefined
-  page: undefined
-  requestId: string
-  error: string
 }
 
 enum FeatureAction {
+  Unknown = 'Unknown',
+  Invalid = 'Invalid',
   LegoSetInStockCheckHomeAlone = 'Lego-SetInStockCheck-HomeAlone'
 }
 
-export { FeatureAction, Session, SessionError }
+interface Logger {
+  debug: (message: string) => void
+  info: (message: string) => void
+  warn: (message: string) => void
+  error: (message: RuntimeError) => void
+}
+
+type FeatureActionScript = (
+  page: Page,
+  requestId: string,
+  logger: Logger
+) => Promise<void>
+
+type RuntimeError = string | undefined
+
+export { FeatureAction, FeatureActionScript, Logger, RuntimeError, Session }
